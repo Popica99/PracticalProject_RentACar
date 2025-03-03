@@ -31,9 +31,9 @@ public class Main {
                 "7 - Add a Rent");
         Scanner scanner = new Scanner(System.in);
         int menuNumber = scanner.nextInt();
-        while (menuNumber > 0)
+        while (menuNumber != 0)
         {
-            if (menuNumber > 7)
+            if (menuNumber > 7 || menuNumber < 0)
             {
                 System.out.println("Wrong number!\n" + "Select another option!");
                 System.out.println("Welcome to the Rent a car!\n" +
