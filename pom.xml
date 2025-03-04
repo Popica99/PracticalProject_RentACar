@@ -27,6 +27,7 @@
             <artifactId>hibernate-core</artifactId>
             <version>6.6.8.Final</version>
         </dependency>
+
     </dependencies>
 
 </project>
