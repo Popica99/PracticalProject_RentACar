@@ -1,10 +1,11 @@
 package org.example.Entities;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "car")
 public class Car {
 
     @Id
@@ -12,13 +13,8 @@ public class Car {
 
     private String car_Model;
 
-    @ManyToOne
-    @JoinColumn(name = "car_Id")
-    private Client client;
-
-    @OneToMany(mappedBy = "car")
-    private List<Rent> rent;
-
+    public Car() {
+    }
     public Car(String car_Model) {
         this.car_Model = car_Model;
     }
@@ -39,11 +35,11 @@ public class Car {
         this.car_Model = car_Model;
     }
 
-    public List<Rent> getRent() {
-        return rent;
-    }
-
-    public void setRent(List<Rent> rent) {
-        this.rent = rent;
+    @Override
+    public String toString() {
+        return "Car{" +
+                "car_Id=" + car_Id +
+                ", car_Model='" + car_Model + '\'' +
+                '}';
     }
 }

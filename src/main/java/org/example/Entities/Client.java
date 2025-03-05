@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "client")
 public class Client {
 
     @Id
@@ -13,9 +14,13 @@ public class Client {
     private String client_Name;
 
     @OneToMany(mappedBy = "client")
-    private List<Car> car;
+    private List<Rent> rents;
 
+    @OneToOne(mappedBy = "client")
+    private Review review;
 
+    public Client() {
+    }
     public Client(String client_Name) {
         this.client_Name = client_Name;
     }
@@ -36,11 +41,29 @@ public class Client {
         this.client_Name = client_Name;
     }
 
-    public List<Car> getCar() {
-        return car;
+    public List<Rent> getRents() {
+        return rents;
     }
 
-    public void setCar(List<Car> car) {
-        this.car = car;
+    public void setRents(List<Rent> rents) {
+        this.rents = rents;
+    }
+
+    public Review getReview() {
+        return review;
+    }
+
+    public void setReview(Review review) {
+        this.review = review;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "client_Id=" + client_Id +
+                ", client_Name='" + client_Name + '\'' +
+                ", rents=" + rents +
+                ", review=" + review +
+                '}';
     }
 }

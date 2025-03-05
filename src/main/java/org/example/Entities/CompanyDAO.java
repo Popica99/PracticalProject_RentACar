@@ -1,51 +1,50 @@
 package org.example.Entities;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import org.example.HibernateUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import java.util.List;
 
 public class CompanyDAO {
 
-    private final Connection connection;
-
-    public CompanyDAO(Connection connection) {
-        this.connection = connection;
-    }
+    private final SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
     public void insertCar(Car car)
     {
-        String sqlAddCar = "INSERT IGNORE INTO car (car_Model) VALUES (?)";
-
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlAddCar))
-        {
-            preparedStatement.setString(1,car.getCar_Model());
-
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+        Session session = sessionFactory.openSession();
+        session.persist(car);
+        session.beginTransaction().commit();
+        session.close();
     }
 
-    public void registerClient(Client client, String car_Model)
+    public void insertClient(Client client)
     {
-        String sqlAddClient = "INSERT IGNORE INTO client (client_Name, car_Id) VALUES (?,?)";
+        Session session = sessionFactory.openSession();
+        session.persist(client);
+        session.beginTransaction().commit();
+        session.close();
+    }
 
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sqlAddClient))
-        {
-            //verificam daca modelul ales este in lista de masini!
-            //daca da - adaugam clientul
-            //daca nu - nu se adauga
-            preparedStatement.setString(1, client.getClient_Name());
-            preparedStatement.setInt(2, 2); //car_Id
+    public void insertReview(Review review)
+    {
+        Session session = sessionFactory.openSession();
+        session.persist(review);
+        session.beginTransaction().commit();
+        session.close();
+    }
 
-            preparedStatement.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+    public List<Car> displayCars(List<Car> cars)
+    {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        cars = session.createQuery("From Car", Car.class).list();
+
+        transaction.commit();
+
+        return cars;
     }
 
 }
