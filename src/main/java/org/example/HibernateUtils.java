@@ -23,6 +23,7 @@ public class HibernateUtils {
                     .setProperty(Environment.PASS, "SDA123")
                     .setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL8Dialect")
                     .setProperty(Environment.HBM2DDL_AUTO, "update")
+                    //.setProperty(Environment.HBM2DDL_AUTO, "create") //se sterg tabelele la repornirea aplicatiei
                     .setProperty(Environment.SHOW_SQL, "true")
                     .setProperty(Environment.FORMAT_SQL, "true")
                     .setProperty(Environment.HIGHLIGHT_SQL, "true")

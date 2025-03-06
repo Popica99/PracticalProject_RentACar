@@ -9,6 +9,7 @@ import java.time.LocalDate;
 public class Rent {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Enable auto-increment
     private int rent_Id;
 
     private double rent_Price; //se stabileste la momentul inchirierii

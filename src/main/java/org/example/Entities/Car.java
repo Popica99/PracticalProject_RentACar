@@ -1,14 +1,13 @@
 package org.example.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "car")
 public class Car {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Enable auto-increment
     private int car_Id;
 
     private String car_Model;

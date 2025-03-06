@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class Review {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Enable auto-increment
     private int review_Id;
 
     private String description_Review;

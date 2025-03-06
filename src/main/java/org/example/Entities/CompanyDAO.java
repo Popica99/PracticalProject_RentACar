@@ -95,14 +95,27 @@ public class CompanyDAO {
 
         List<Rent> rents = new ArrayList<>();
         rents = session.createQuery("From Rent", Rent.class).list();
-        for (Rent rent1 : rents)
+        if (rents.isEmpty())
         {
-            if (rent1.getCar().getCar_Id() == rent.getCar().getCar_Id())
+            session.persist(rent);
+            System.out.println("Rent added!");
+        }
+        else
+        {
+            for (Rent rent1 : rents)
             {
-                if (rent1.getEnd_Period().isBefore(rent.getStart_Period())) session.persist(rent);
-                else System.out.println("Unavailable car from this date!");
+                if (rent1.getCar().getCar_Id() == rent.getCar().getCar_Id())
+                {
+                    if (rent1.getEnd_Period().isBefore(rent.getStart_Period()))
+                    {
+                        session.persist(rent);
+                        System.out.println("Rent added!");
+                    }
+                    else System.out.println("Unavailable car from this date!");
+                }
             }
         }
+
 
 
         session.beginTransaction().commit();
