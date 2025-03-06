@@ -9,6 +9,7 @@ import java.util.List;
 public class Client {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Enable auto-increment
     private int client_Id;
 
     private String client_Name;
@@ -21,6 +22,7 @@ public class Client {
 
     public Client() {
     }
+
     public Client(String client_Name) {
         this.client_Name = client_Name;
     }

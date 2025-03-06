@@ -13,12 +13,11 @@ Please choose one of the following options:
 7 - Add a Rent
 * */
 
-import org.example.Entities.Car;
-import org.example.Entities.Client;
-import org.example.Entities.CompanyDAO;
-import org.example.Entities.Review;
+import org.example.Entities.*;
 import org.hibernate.SessionFactory;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -33,9 +32,9 @@ public class Main {
                 "Please choose one of the following options:\n" +
                 "0 - End session\n" +
                 "1 - Register a Car\n" +
-                "2 - Display all Car\n" +
+                "2 - Display all Cars\n" +
                 "3 - Register a Client\n" +
-                "4 - Display all Client\n" +
+                "4 - Display all Clients\n" +
                 "5 - Register a Review\n" +
                 "6 - Display all Reviews\n" +
                 "7 - Add a Rent");
@@ -49,9 +48,9 @@ public class Main {
                         "Please choose one of the following options:\n" +
                         "0 - End session\n" +
                         "1 - Register a Car\n" +
-                        "2 - Display all Car\n" +
+                        "2 - Display all Cars\n" +
                         "3 - Register a Client\n" +
-                        "4 - Display all Client\n" +
+                        "4 - Display all Clients\n" +
                         "5 - Register a Review\n" +
                         "6 - Display all Reviews\n" +
                         "7 - Add a Rent");
@@ -87,31 +86,74 @@ public class Main {
                     }
                     case 4: {
                         System.out.println("4 was selected");
+                        System.out.println("Clients with rent: ");
+                        List<Client> clients = new ArrayList<>();
+                        for (Client client : companyDAO.displayClients(clients))
+                        {
+                            System.out.println(client.toString());
+                        }
                         break;
                     }
                     case 5: {
                         System.out.println("5 was selected");
+                        System.out.println("Write the name of the client: ");
+                        String clientName = scanner.nextLine();
+
                         System.out.println("Write a review: ");
                         String reviewDescription = scanner.nextLine();
-                        Review review = new Review(reviewDescription);
-                        companyDAO.insertReview(review);
+                        companyDAO.insertReview(new Review(reviewDescription), clientName);
                         break;
                     }
                     case 6: {
                         System.out.println("6 was selected");
+                        System.out.println("All reviews: ");
+                        List<Review> reviews = new ArrayList<>();
+                        for (Review review : companyDAO.displayReviews(reviews))
+                        {
+                            System.out.println(review.toString());
+                        }
                         break;
                     }
                     case 7: {
                         System.out.println("7 was selected");
+
+                        System.out.println("Write the client name: ");
+                        String clientName = scanner.nextLine();
+
+                        System.out.println("Choose a car from the list below:");
+                        List<Car> cars = new ArrayList<>();
+                        for(Car car : companyDAO.displayCars(cars))
+                        {
+                            System.out.println(car.getCar_Model());
+                        }
+                        System.out.println("Write the car  model: ");
+                        String carModel = scanner.nextLine();
+
+                        System.out.println("Write the price for the rent: ");
+                        double rentPrice = scanner.nextDouble();
+                        scanner.nextLine();
+
+                        System.out.println("Write the start of the rent (dd-MM-yyyy): ");
+                        String startDate = scanner.nextLine();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+                        LocalDate startPeriod = LocalDate.parse(startDate, formatter);
+
+                        System.out.println("Write the end of the rent (dd-MM-yyyy): ");
+                        String endDate = scanner.nextLine();
+                        LocalDate endPeriod = LocalDate.parse(endDate, formatter);
+
+                        Rent rent = new Rent(rentPrice, startPeriod, endPeriod);
+                        companyDAO.insertRent(rent, clientName, carModel);
+                        System.out.println();
                         break;
                     }
                 }
                 System.out.println("Welcome to the Rent a car!\n" +
                         "Please choose one of the following options:\n" +
                         "0 - End session\n" +
-                        "1 - Register a Car\n" +
+                        "1 - Register a Cars\n" +
                         "2 - Display all Car\n" +
-                        "3 - Register a Client\n" +
+                        "3 - Register a Clients\n" +
                         "4 - Display all Client\n" +
                         "5 - Register a Review\n" +
                         "6 - Display all Reviews\n" +

@@ -12,7 +12,8 @@ public class Rent {
     private int rent_Id;
 
     private double rent_Price; //se stabileste la momentul inchirierii
-    private LocalDate rent_Period;
+    private LocalDate start_Period;
+    private LocalDate end_Period;
 
     @ManyToOne
     @JoinColumn(name = "client_Id")
@@ -22,16 +23,14 @@ public class Rent {
     @JoinColumn(name = "car_Id")
     private Car car;
 
-    @OneToOne(mappedBy = "rent")
-    private Review review;
-
 
     public Rent() {
     }
 
-    public Rent(double rent_Price, LocalDate rent_Period) {
+    public Rent(double rent_Price, LocalDate start_Period, LocalDate end_Period) {
         this.rent_Price = rent_Price;
-        this.rent_Period = rent_Period;
+        this.start_Period = start_Period;
+        this.end_Period = end_Period;
     }
 
 
@@ -51,14 +50,6 @@ public class Rent {
         this.rent_Price = rent_Price;
     }
 
-    public LocalDate getRent_Period() {
-        return rent_Period;
-    }
-
-    public void setRent_Period(LocalDate rent_Period) {
-        this.rent_Period = rent_Period;
-    }
-
     public Car getCar() {
         return car;
     }
@@ -67,15 +58,27 @@ public class Rent {
         this.car = car;
     }
 
-    @Override
-    public String toString() {
-        return "Rent{" +
-                "rent_Id=" + rent_Id +
-                ", rent_Price=" + rent_Price +
-                ", rent_Period=" + rent_Period +
-                ", client=" + client +
-                ", car=" + car +
-                ", review=" + review +
-                '}';
+    public LocalDate getStart_Period() {
+        return start_Period;
+    }
+
+    public void setStart_Period(LocalDate start_Period) {
+        this.start_Period = start_Period;
+    }
+
+    public LocalDate getEnd_Period() {
+        return end_Period;
+    }
+
+    public void setEnd_Period(LocalDate end_Period) {
+        this.end_Period = end_Period;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }
