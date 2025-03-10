@@ -64,8 +64,6 @@ public class Client {
         return "Client{" +
                 "client_Id=" + client_Id +
                 ", client_Name='" + client_Name + '\'' +
-                ", rents=" + rents +
-                ", review=" + review +
                 '}';
     }
 }

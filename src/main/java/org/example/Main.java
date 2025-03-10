@@ -14,11 +14,17 @@ Please choose one of the following options:
 * */
 
 import org.example.Entities.*;
+import org.example.Exceptions.InvalidCarException;
+import org.example.Exceptions.InvalidClientException;
+import org.example.Exceptions.InvalidPeriodException;
 import org.hibernate.SessionFactory;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,32 +34,15 @@ public class Main {
         SessionFactory sessionFactory = HibernateUtils.getSessionFactory();
 
         //---------- Menu ----------
-        System.out.println("Welcome to the Rent a car!\n" +
-                "Please choose one of the following options:\n" +
-                "0 - End session\n" +
-                "1 - Register a Car\n" +
-                "2 - Display all Cars\n" +
-                "3 - Register a Client\n" +
-                "4 - Display all Clients\n" +
-                "5 - Register a Review\n" +
-                "6 - Display all Reviews\n" +
-                "7 - Add a Rent");
+        System.out.println("Welcome to the Rent a car!");
+        displayMenu();
         Scanner scanner = new Scanner(System.in);
         int menuNumber = scanner.nextInt();
         scanner.nextLine();
         while (menuNumber != 0) {
             if (menuNumber > 7 || menuNumber < 0) {
                 System.out.println("Wrong number!\n" + "Select another option!");
-                System.out.println("Welcome to the Rent a car!\n" +
-                        "Please choose one of the following options:\n" +
-                        "0 - End session\n" +
-                        "1 - Register a Car\n" +
-                        "2 - Display all Cars\n" +
-                        "3 - Register a Client\n" +
-                        "4 - Display all Clients\n" +
-                        "5 - Register a Review\n" +
-                        "6 - Display all Reviews\n" +
-                        "7 - Add a Rent");
+                displayMenu();
                 menuNumber = scanner.nextInt();
                 scanner.nextLine();
             } else {
@@ -101,7 +90,14 @@ public class Main {
 
                         System.out.println("Write a review: ");
                         String reviewDescription = scanner.nextLine();
-                        companyDAO.insertReview(new Review(reviewDescription), clientName);
+                        try
+                        {
+                            companyDAO.insertReview(new Review(reviewDescription), clientName);
+                        }
+                        catch (InvalidClientException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     }
                     case 6: {
@@ -130,43 +126,87 @@ public class Main {
                         String carModel = scanner.nextLine();
 
                         System.out.println("Write the price for the rent: ");
-                        double rentPrice = scanner.nextDouble();
-                        scanner.nextLine();
+                        double copyRentPrice = 0;
+                        try {
+                            double rentPrice = scanner.nextDouble();
+                            scanner.nextLine();
+                            copyRentPrice = rentPrice;
+                        }
+                        catch (InputMismatchException e)
+                        {
+                            System.out.println("Wrong price!");
+                            scanner.nextLine();
+                            break;
+
+                        }
 
                         System.out.println("Write the start of the rent (dd-MM-yyyy): ");
                         String startDate = scanner.nextLine();
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-                        LocalDate startPeriod = LocalDate.parse(startDate, formatter);
+                        LocalDate copyStartPeriod = LocalDate.now();
+                        try {
+                            LocalDate startPeriod = LocalDate.parse(startDate, formatter);
+                            copyStartPeriod = startPeriod;
+                        }
+                        catch (DateTimeParseException e)
+                        {
+                            System.out.println("Wrong date format! Please use this format (dd-MM-yyyy)");
+                            break;
+                        }
 
                         System.out.println("Write the end of the rent (dd-MM-yyyy): ");
                         String endDate = scanner.nextLine();
-                        LocalDate endPeriod = LocalDate.parse(endDate, formatter);
+                        LocalDate copyEndPeriod = LocalDate.now();
+                        try {
+                            LocalDate endPeriod = LocalDate.parse(endDate, formatter);
+                            copyEndPeriod = endPeriod;
+                        }
+                        catch (DateTimeParseException e)
+                        {
+                            System.out.println("Wrong date format! Please use this format (dd-MM-yyyy)");
+                            break;
+                        }
 
-                        Rent rent = new Rent(rentPrice, startPeriod, endPeriod);
-                        companyDAO.insertRent(rent, clientName, carModel);
+                        Rent rent = new Rent(copyRentPrice, copyStartPeriod, copyEndPeriod);
+                        try
+                        {
+                            companyDAO.insertRent(rent, clientName, carModel);
+                        }
+                        catch (InvalidPeriodException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                        catch (InvalidCarException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
+                        catch (InvalidClientException e)
+                        {
+                            System.out.println(e.getMessage());
+                        }
                         System.out.println();
                         break;
                     }
                 }
-                System.out.println("Welcome to the Rent a car!\n" +
-                        "Please choose one of the following options:\n" +
-                        "0 - End session\n" +
-                        "1 - Register a Cars\n" +
-                        "2 - Display all Car\n" +
-                        "3 - Register a Clients\n" +
-                        "4 - Display all Client\n" +
-                        "5 - Register a Review\n" +
-                        "6 - Display all Reviews\n" +
-                        "7 - Add a Rent");
+                displayMenu();
                 menuNumber = scanner.nextInt();
                 scanner.nextLine();
             }
-
         }
         scanner.close();
         System.out.println("Session ended!");
+    }
 
-
-
+    private static void displayMenu() {
+        System.out.println(
+                "Please choose one of the following options:\n" +
+                "0 - End session\n" +
+                "1 - Register a Car\n" +
+                "2 - Display all Cars\n" +
+                "3 - Register a Client\n" +
+                "4 - Display all Clients\n" +
+                "5 - Register a Review\n" +
+                "6 - Display all Reviews\n" +
+                "7 - Add a Rent");
     }
 }
